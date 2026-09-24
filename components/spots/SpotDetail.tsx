@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
+import { ArrowLeft, Heart } from "lucide-react";
 import type { Spot } from "@/types/spot";
 import {
   categoryLabels,
@@ -27,9 +28,7 @@ export function SpotDetail({ spot, backHref = "/spots" }: SpotDetailProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const router = useRouter();
   const backLabel =
-    backHref === "/want-to-go"
-      ? "行きたい一覧へ戻る"
-      : "スポット一覧へ戻る";
+    backHref === "/want-to-go" ? "行きたい一覧へ戻る" : "スポット一覧へ戻る";
   const isStoredSpot = Boolean(getStoredSpotById(spot.id));
   const wantToGo = useSyncExternalStore(
     subscribeWantToGo,
@@ -57,14 +56,15 @@ export function SpotDetail({ spot, backHref = "/spots" }: SpotDetailProps) {
   };
 
   return (
-    <main className="min-h-screen bg-stone-50 px-4 py-10 text-slate-800 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-wan-ivory px-4 py-10 text-wan-navy sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex items-center justify-between gap-3">
           <Link
             href={backHref}
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
           >
-            ← {backLabel}
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+            {backLabel}
           </Link>
 
           <div className="flex flex-wrap items-center justify-end gap-3">
@@ -73,106 +73,111 @@ export function SpotDetail({ spot, backHref = "/spots" }: SpotDetailProps) {
               onClick={handleWantToGo}
               className={
                 wantToGo
-                  ? "inline-flex items-center rounded-full bg-amber-100 px-4 py-2 text-sm font-medium text-amber-800 transition-colors hover:bg-amber-200"
-                  : "inline-flex items-center rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-50"
+                  ? "inline-flex items-center gap-2 rounded-full bg-wan-orange-light px-4 py-2 text-sm font-medium text-wan-orange transition-colors hover:bg-orange-200"
+                  : "inline-flex items-center gap-2 rounded-full border border-slate-400 bg-white px-4 py-2 text-sm font-medium text-wan-navy transition-colors hover:border-wan-navy hover:bg-slate-50"
               }
             >
-              {wantToGo ? "♥ 行きたい済み" : "♡ 行きたい"}
+              <Heart
+                aria-hidden="true"
+                className="h-4 w-4"
+                fill={wantToGo ? "currentColor" : "none"}
+              />
+              {wantToGo ? "行きたい済み" : "行きたい"}
             </button>
             {isStoredSpot ? (
               <div className="flex items-center gap-3">
-              <Link
-                href={`/spots/${spot.id}/edit`}
-                className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
-              >
-                編集する
-              </Link>
-              <button
-                type="button"
-                onClick={() => setIsDeleteOpen(true)}
-                className="inline-flex items-center rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100"
-              >
-                削除する
-              </button>
-            </div>
+                <Link
+                  href={`/spots/${spot.id}/edit`}
+                  className="inline-flex items-center rounded-full bg-wan-orange px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-700"
+                >
+                  編集する
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteOpen(true)}
+                  className="inline-flex items-center rounded-full border border-red-400 bg-white px-4 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-50"
+                >
+                  削除する
+                </button>
+              </div>
             ) : null}
           </div>
         </div>
 
         <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-          <div className="border-b border-slate-200 bg-slate-50 px-5 py-6 sm:px-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
+          <div className="border-b border-slate-200 bg-white px-5 py-6 sm:px-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wan-orange">
               {categoryLabels[spot.category]}
             </p>
-            <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-wan-navy sm:text-4xl">
               {spot.name}
             </h1>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200">
+              <span className="rounded-full bg-wan-green px-3 py-1 text-sm font-medium text-wan-navy ring-1 ring-wan-green">
                 {spot.prefecture}
               </span>
-              <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-slate-700 ring-1 ring-slate-200">
+              <span className="rounded-full bg-wan-orange-light px-3 py-1 text-sm font-medium text-wan-orange ring-1 ring-wan-orange-light">
                 {spot.dogAccess ? dogAccessLabels[spot.dogAccess] : "未確認"}
               </span>
             </div>
           </div>
 
-          <div className="grid gap-5 p-5 sm:p-8 md:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="grid gap-x-10 gap-y-7 p-5 sm:p-8 md:grid-cols-2">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 住所
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {spot.address || "未確認"}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 犬の利用可否
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {spot.dogAccess ? dogAccessLabels[spot.dogAccess] : "未確認"}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 対応サイズ
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {formatDogSizes(spot.supportedDogSizes)}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 ドッグラン
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {formatBoolean(spot.hasDogRun)}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 犬用メニュー
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {formatBoolean(spot.hasDogMenu)}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="border-b border-slate-100 pb-5 md:border-b-0 md:pb-0">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 駐車場
               </p>
-              <p className="mt-2 text-base font-medium text-slate-700">
+              <p className="mt-2 text-base font-medium text-wan-navy">
                 {formatBoolean(spot.hasParking)}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
+            <div className="border-t border-slate-100 pt-6 md:col-span-2">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 Webサイト
               </p>
@@ -186,17 +191,17 @@ export function SpotDetail({ spot, backHref = "/spots" }: SpotDetailProps) {
                   {spot.websiteUrl}
                 </a>
               ) : (
-                <p className="mt-2 text-base font-medium text-slate-700">
+                <p className="mt-2 text-base font-medium text-wan-navy">
                   未確認
                 </p>
               )}
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
+            <div className="border-t border-slate-100 pt-6 md:col-span-2">
               <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-400">
                 メモ
               </p>
-              <p className="mt-2 whitespace-pre-wrap text-base leading-relaxed text-slate-700">
+              <p className="mt-2 whitespace-pre-wrap text-base leading-relaxed text-wan-navy">
                 {spot.memo || "未確認"}
               </p>
             </div>

@@ -1,16 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { SpotCard } from "@/components/spots/SpotCard";
 import { spots as mockSpots } from "@/lib/mock-data";
 import { categoryLabels, dogSizeLabels } from "@/lib/spot-display";
-import { getStoredSpots } from "@/lib/spot-storage";
+import {
+  EMPTY_SPOTS_SNAPSHOT,
+  getStoredSpotsSnapshot,
+  parseStoredSpotsSnapshot,
+  subscribeStoredSpots,
+} from "@/lib/spot-storage";
 import {
   prefectureOptions,
   type DogSizeType,
   type Prefecture,
-  type Spot,
   type SpotCategory,
 } from "@/types/spot";
 
@@ -35,7 +40,15 @@ const initialFilters: Filters = {
 };
 
 export default function SpotsPage() {
-  const [storedSpots] = useState<Spot[]>(() => getStoredSpots());
+  const storedSpotsSnapshot = useSyncExternalStore(
+    subscribeStoredSpots,
+    getStoredSpotsSnapshot,
+    () => EMPTY_SPOTS_SNAPSHOT,
+  );
+  const storedSpots = useMemo(
+    () => parseStoredSpotsSnapshot(storedSpotsSnapshot),
+    [storedSpotsSnapshot],
+  );
   const [filters, setFilters] = useState<Filters>(initialFilters);
 
   const allSpots = useMemo(() => [...mockSpots, ...storedSpots], [storedSpots]);
@@ -76,14 +89,14 @@ export default function SpotsPage() {
   const resetFilters = () => setFilters(initialFilters);
 
   return (
-    <main className="min-h-screen bg-stone-50 px-4 py-10 text-slate-800 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-wan-ivory px-4 py-10 text-wan-navy sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-600">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-wan-orange">
               WanClip
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-wan-navy sm:text-4xl">
               スポット一覧
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-slate-600 sm:text-base">
@@ -93,8 +106,9 @@ export default function SpotsPage() {
 
           <Link
             href="/spots/new"
-            className="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+            className="inline-flex items-center justify-center rounded-full bg-wan-orange px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-wan-orange focus:ring-offset-2"
           >
+            <Plus aria-hidden="true" className="mr-2 h-4 w-4" />
             新規登録
           </Link>
         </header>

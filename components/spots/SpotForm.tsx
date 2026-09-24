@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import {
   categoryLabels,
   dogAccessLabels,
@@ -207,23 +208,24 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
   };
 
   return (
-    <main className="min-h-screen bg-stone-50 px-4 py-10 text-slate-800 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-wan-ivory px-4 py-10 text-wan-navy sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex items-center justify-between gap-3">
           <Link
             href="/spots"
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-full border border-wan-orange bg-white px-3 py-2 text-sm font-medium text-wan-orange shadow-sm transition-colors hover:bg-wan-orange-light"
           >
-            ← 一覧へ戻る
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+            スポット一覧へ戻る
           </Link>
         </div>
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wan-orange">
               WanClip
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-wan-navy">
               {isEditMode ? "スポットを編集する" : "スポットを登録する"}
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">
@@ -336,7 +338,7 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
                   ).map(([value, label]) => (
                     <label
                       key={value}
-                      className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
+                      className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-wan-green-light px-3 py-2 text-sm text-slate-700"
                     >
                       <input
                         type="radio"
@@ -344,7 +346,7 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
                         value={value}
                         checked={form.dogAccess === value}
                         onChange={() => handleChange("dogAccess", value)}
-                        className="accent-amber-600"
+                        className="accent-wan-orange"
                       />
                       {label}
                     </label>
@@ -367,13 +369,13 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
                   ).map(([value, label]) => (
                     <label
                       key={value}
-                      className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700"
+                      className="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-wan-green-light px-3 py-2 text-sm text-slate-700"
                     >
                       <input
                         type="checkbox"
                         checked={form.supportedDogSizes.includes(value)}
                         onChange={() => handleDogSizeToggle(value)}
-                        className="accent-amber-600"
+                        className="accent-wan-orange"
                       />
                       {label}
                     </label>
@@ -493,7 +495,7 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
             <div className="flex items-center justify-end pt-2">
               <button
                 type="submit"
-                className="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+                className="rounded-full bg-wan-orange px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-wan-orange focus:ring-offset-2"
               >
                 {isEditMode ? "更新する" : "登録する"}
               </button>
@@ -524,7 +526,7 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="rounded-full bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-500"
+                className="rounded-full bg-wan-orange px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-700"
               >
                 {isEditMode ? "更新する" : "登録する"}
               </button>
@@ -536,7 +538,7 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
       {isSuccessOpen && submittedSpot ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4">
           <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-wan-orange">
               {isEditMode ? "更新完了" : "登録完了"}
             </p>
             <h2 className="mt-4 text-2xl font-bold text-slate-900">
@@ -549,9 +551,9 @@ export function SpotForm({ mode = "create", initialSpot }: SpotFormProps) {
             </p>
             <Link
               href={isEditMode ? `/spots/${submittedSpot.id}` : "/spots"}
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-slate-700"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-wan-orange px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-orange-700"
             >
-              {isEditMode ? "詳細画面へ戻る" : "スポット一覧に戻る"}
+              {isEditMode ? "詳細画面へ" : "スポット一覧へ"}
             </Link>
           </div>
         </div>
