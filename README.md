@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WanClip
 
-## Getting Started
+WanClip は、犬と一緒に利用できるカフェ、飲食店、宿泊施設、観光スポット、ドッグランなどを探して登録できる Web サービスです。
 
-First, run the development server:
+## 作成した背景・目的
+
+犬連れで利用できる施設には、店内利用の可否、対応できる犬のサイズ、ドッグランや犬用メニューの有無など、事前に確認したい情報があります。一方で、これらの情報は分散していることがあります。
+
+WanClip は、犬連れでのお出かけに必要な情報を探しやすく、確認しやすくすることを目的に作成しています。
+
+## 現在実装済みの機能
+
+- スポット一覧表示
+- スポット詳細表示
+- スポットの新規登録
+- 登録したスポットの編集・削除
+- 施設名や住所を対象にしたキーワード検索
+- カテゴリ、都道府県、対応犬サイズ、ドッグラン、犬用メニュー、駐車場による絞り込み
+- 詳細画面・一覧カードからの「行きたい」登録・解除
+- 「行きたい」に登録したスポットの一覧表示
+- ブラウザの localStorage によるスポット情報と「行きたい」状態の保持
+
+初期表示用として、5件のモックスポットを用意しています。
+
+## 使用技術
+
+- Next.js `16.3.6`
+- React `19.2.8`
+- TypeScript `^5`
+- Tailwind CSS `^4`
+- ESLint `^9`
+- Next.js App Router
+
+## セットアップ
+
+### 1. リポジトリを clone
+
+```bash
+git clone https://github.com/hidemiomarvel-eng/wan-clip.git
+cd wan-clip
+```
+
+### 2. 依存関係をインストール
+
+```bash
+npm install
+```
+
+### 3. 開発サーバーを起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+ブラウザで [http://localhost:3000](http://localhost:3000) を開いてください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### その他のコマンド
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# ESLint
+npm run lint
 
-## Learn More
+# 本番用ビルド
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# 本番用サーバーの起動
+npm run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 主な画面
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/`: ホーム画面
+- `/spots`: スポット一覧
+- `/spots/[id]`: スポット詳細
+- `/spots/new`: スポット新規登録
+- `/spots/[id]/edit`: 登録済みスポットの編集
+- `/want-to-go`: 行きたい一覧
 
-## Deploy on Vercel
+## データ保存について
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+現在は認証機能やデータベースを導入していません。次の情報をブラウザの localStorage に保存しています。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ユーザーが登録・編集・削除するスポット情報
+- 「行きたい」に登録したスポットの ID
+
+スポット情報と「行きたい」の状態は別のデータとして管理しています。
+
+そのため、保存データはブラウザごとに管理され、他のユーザーや別のブラウザとは共有されません。ブラウザの保存データを削除すると、登録したスポットや「行きたい」の状態も失われます。
+
+## 今後の予定
+
+以下は現在未実装で、今後検討している機能です。
+
+- ユーザー登録・ログイン
+- Supabase を利用した認証・データベース化
+- ユーザー同士によるスポット情報の更新
+- スポット情報の最終更新日・最終確認日
+- レビュー投稿・評価
+- 訪問記録
+- マイページと訪問履歴の表示
+- 写真投稿
+- 閉店・休業などの営業状況管理
+- 情報変更履歴、通報、管理者による情報管理
+
+将来の DB 化では、スポット情報とユーザー固有の状態を分離し、「行きたい」は `user_id` と `spot_id` の関係として管理する方針です。訪問記録は `user_id`、`spot_id`、`visited_at` などを持つ、訪問 1 回ごとの記録として管理する予定です。
+
+詳細な仕様は [docs/specification.md](docs/specification.md) を参照してください。
