@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { SpotDetail } from "@/components/spots/SpotDetail";
 import { spots as mockSpots } from "@/lib/mock-data";
@@ -9,7 +9,14 @@ import { getStoredSpotById } from "@/lib/spot-storage";
 
 export default function SpotDetailPage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const id = params.id;
+  const backHref =
+    searchParams.get("from") === "want-to-go" ? "/want-to-go" : "/spots";
+  const backLabel =
+    backHref === "/want-to-go"
+      ? "行きたい一覧へ戻る"
+      : "スポット一覧へ戻る";
 
   const spot = useMemo(() => {
     if (typeof window === "undefined") {
@@ -33,15 +40,15 @@ export default function SpotDetailPage() {
             指定されたスポットは削除されたか、URLが正しくありません。
           </p>
           <Link
-            href="/spots"
+            href={backHref}
             className="mt-6 inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
           >
-            一覧へ戻る
+            {backLabel}
           </Link>
         </div>
       </main>
     );
   }
 
-  return <SpotDetail spot={spot} />;
+  return <SpotDetail spot={spot} backHref={backHref} />;
 }

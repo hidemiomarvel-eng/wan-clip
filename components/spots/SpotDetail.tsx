@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { Spot } from "@/types/spot";
 import {
   categoryLabels,
@@ -11,15 +11,40 @@ import {
   formatDogSizes,
 } from "@/lib/spot-display";
 import { deleteStoredSpot, getStoredSpotById } from "@/lib/spot-storage";
+import {
+  addWantToGo,
+  isWantToGo,
+  removeWantToGo,
+  subscribeWantToGo,
+} from "@/lib/want-to-go-storage";
 
 type SpotDetailProps = {
   spot: Spot;
+  backHref?: string;
 };
 
-export function SpotDetail({ spot }: SpotDetailProps) {
+export function SpotDetail({ spot, backHref = "/spots" }: SpotDetailProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const router = useRouter();
+  const backLabel =
+    backHref === "/want-to-go"
+      ? "行きたい一覧へ戻る"
+      : "スポット一覧へ戻る";
   const isStoredSpot = Boolean(getStoredSpotById(spot.id));
+  const wantToGo = useSyncExternalStore(
+    subscribeWantToGo,
+    () => isWantToGo(spot.id),
+    () => false,
+  );
+
+  const handleWantToGo = () => {
+    if (wantToGo) {
+      removeWantToGo(spot.id);
+      return;
+    }
+
+    addWantToGo(spot.id);
+  };
 
   const handleDelete = () => {
     if (!isStoredSpot) {
@@ -27,6 +52,7 @@ export function SpotDetail({ spot }: SpotDetailProps) {
     }
 
     deleteStoredSpot(spot.id);
+    removeWantToGo(spot.id);
     router.push("/spots");
   };
 
@@ -35,14 +61,26 @@ export function SpotDetail({ spot }: SpotDetailProps) {
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex items-center justify-between gap-3">
           <Link
-            href="/spots"
+            href={backHref}
             className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
           >
-            ← 一覧へ戻る
+            ← {backLabel}
           </Link>
 
-          {isStoredSpot ? (
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={handleWantToGo}
+              className={
+                wantToGo
+                  ? "inline-flex items-center rounded-full bg-amber-100 px-4 py-2 text-sm font-medium text-amber-800 transition-colors hover:bg-amber-200"
+                  : "inline-flex items-center rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-700 transition-colors hover:bg-amber-50"
+              }
+            >
+              {wantToGo ? "♥ 行きたい済み" : "♡ 行きたい"}
+            </button>
+            {isStoredSpot ? (
+              <div className="flex items-center gap-3">
               <Link
                 href={`/spots/${spot.id}/edit`}
                 className="inline-flex items-center rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-700"
@@ -57,7 +95,8 @@ export function SpotDetail({ spot }: SpotDetailProps) {
                 削除する
               </button>
             </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
 
         <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
