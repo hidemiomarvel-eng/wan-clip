@@ -22,6 +22,10 @@ WanClip は、犬連れでのお出かけに必要な情報を探しやすく、
 
 初期表示用として、5件のモックスポットを用意しています。
 
+## デモ
+
+公開URL: [https://wan-clip.vercel.app/](https://wan-clip.vercel.app/)
+
 ## 使用技術
 
 - Next.js `16.3.6`
